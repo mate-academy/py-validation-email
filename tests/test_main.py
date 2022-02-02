@@ -1,6 +1,3 @@
-# TODO: add tests
-from app.main import hello_world
+from app.main import validate_email
 
-
-def test_hello_world():
-    assert hello_world() == "Hello, world!"
+# write your tests here
