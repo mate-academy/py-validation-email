@@ -74,5 +74,5 @@ def email_generator():
         (email_generator(), True),
     ],
 )
-def test_random_password_generator(email, expected):
+def test_random_email_generator(email, expected):
     assert validate_email(email) is expected
