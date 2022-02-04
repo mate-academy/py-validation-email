@@ -1,76 +1,85 @@
 from app.main import validate_email
 
-import random
-import string
-
 import pytest
-
-
-def email_generator():
-    letters_lower = string.ascii_lowercase
-    letters_upper = string.ascii_uppercase
-    numbers = string.digits
-    dot = "."
-    hyphens = "-"
-    underlining = "_"
-
-    length_pi = random.randint(8, 16)
-
-    all_symbols = [letters_upper, letters_lower, numbers, dot, hyphens, underlining]
-    personal_info = ""
-    domain_before_dot = ""
-    domain_after_dot = ""
-
-    personal_info += random.choice(letters_upper)
-    personal_info += random.choice(letters_lower)
-    personal_info += random.choice(numbers)
-    personal_info += random.choice(dot)
-    personal_info += random.choice(hyphens)
-    personal_info += random.choice(underlining)
-
-    while len(personal_info) < length_pi:
-        personal_info += random.choice(all_symbols[random.randint(0, 5)])
-
-    length_domain = random.randint(3, 6)
-
-    domain_before_dot += random.choice(letters_lower)
-    domain_after_dot += random.choice(letters_lower)
-
-    while len(domain_before_dot) < length_domain:
-        domain_before_dot += random.choice(letters_lower[random.randint(0, 25)])
-
-    while len(domain_after_dot) < length_domain:
-        domain_after_dot += random.choice(letters_lower[random.randint(0, 25)])
-
-    random_email = personal_info + "@" + domain_before_dot + "." + domain_after_dot
-
-    return random_email
 
 
 @pytest.mark.parametrize(
     "email, expected",
     [
-        (email_generator(), True),
-        (email_generator(), True),
-        (email_generator(), True),
-        (email_generator(), True),
-        (email_generator(), True),
-        (email_generator(), True),
-        (email_generator(), True),
-        (email_generator(), True),
-        (email_generator(), True),
-        (email_generator(), True),
-        (email_generator(), True),
-        (email_generator(), True),
-        (email_generator(), True),
-        (email_generator(), True),
-        (email_generator(), True),
-        (email_generator(), True),
-        (email_generator(), True),
-        (email_generator(), True),
-        (email_generator(), True),
-        (email_generator(), True),
+        ("mate....academy.@mate.com", False),  # 1-st bag
+        (".d.e.v.my..email@dev.com", False),
+        ("d.e.v.my..email@dev.com.", False),
+        ("d.e.v.my.email@.dev.com", False),  # 2-nd bag
+        ("d.e.v.my.email@dev.com", True),
     ],
 )
-def test_random_email_generator(email, expected):
+def test_email_with_dots(email, expected):
+    assert validate_email(email) is expected
+
+
+@pytest.mark.parametrize(
+    "email, expected",
+    [
+        ("m#te_Ac^43*my@mate.com", False),
+        ("!@#$%^&*+my@dev.com", False),
+    ],
+)
+def test_email_with_special_symbols(email, expected):
+    assert validate_email(email) is expected
+
+
+@pytest.mark.parametrize(
+    "email, expected",
+    [
+        ("123456897@mate.com", True),
+        ("9876543210@dev.com", True),
+    ],
+)
+def test_email_only_with_digits(email, expected):
+    assert validate_email(email) is expected
+
+
+@pytest.mark.parametrize(
+    "email, expected",
+    [
+        ("agfdsayufgsa@mate.com", True),
+        ("DUYVSBFDSVFU@dev.com", True),
+        ("DUYVSBFDSVFUighdfsiufds@dev.com", True),
+    ],
+)
+def test_email_only_with_letters(email, expected):
+    assert validate_email(email) is expected
+
+
+@pytest.mark.parametrize(
+    "email, expected",
+    [
+        ("my_Post_is_corRect@mate.com", True),
+        ("my-post-IS_coRct@dev.com", True),
+        ("MY_post-is_cor-rect@dev.com", True),
+    ],
+)
+def test_email_with_underline_and_hyphens(email, expected):
+    assert validate_email(email) is expected
+
+
+@pytest.mark.parametrize(
+    "email, expected",
+    [
+        ("Ab1-0._@mate.com", True),
+        ("test_p0.t-with_All@dev.com", True),
+    ],
+)
+def test_email_with_all_accept_symbols(email, expected):
+    assert validate_email(email) is expected
+
+
+@pytest.mark.parametrize(
+    "email, expected",
+    [
+        ("Ab1-0._mate.com", False),
+        ("test_p0.t-with_Alldev.com", False),
+    ],
+)
+def test_email_without_at_sign(email, expected):
     assert validate_email(email) is expected
