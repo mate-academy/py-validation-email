@@ -6,10 +6,10 @@ import pytest
 @pytest.mark.parametrize(
     "email, expected",
     [
-        ("mate....academy.@mate.com", False),  # 1-st bag
+        ("mate....academy.@mate.com", False),  # 1-st bug
         (".d.e.v.my..email@dev.com", False),
         ("d.e.v.my..email@dev.com.", False),
-        ("d.e.v.my.email@.dev.com", False),  # 2-nd bag
+        ("d.e.v.my.email@.dev.com", False),  # 2-nd bug
         ("d.e.v.my.email@dev.com", True),
     ],
 )
