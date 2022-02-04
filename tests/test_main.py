@@ -3,8 +3,6 @@ from app.main import validate_email
 import random
 import string
 
-from app.main import validate_email
-
 import pytest
 
 
